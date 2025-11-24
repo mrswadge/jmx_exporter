@@ -99,7 +99,20 @@ rules:
 
 ### Hot Reload
 
-The servlet automatically reloads the configuration file when it detects changes (if using `configFile` parameter). This allows you to update metrics collection rules without restarting the server.
+When using the `configFile` init parameter (file path), the servlet automatically reloads the configuration file when it detects changes. This is handled by the underlying JmxCollector which checks the file's last modified timestamp on each scrape and reloads if necessary.
+
+**Note**: Hot reload only works with `configFile` (filesystem path), not with `configResource` (classpath resource), since classpath resources cannot be monitored for changes.
+
+To update the configuration without restarting:
+1. Edit your configuration file (e.g., `/etc/jmx-exporter/config.yaml`)
+2. Save the changes
+3. The next metrics scrape will automatically use the updated configuration
+
+This allows you to:
+- Add or remove MBean collection rules
+- Modify metric names and labels
+- Adjust include/exclude patterns
+- All without requiring a server restart
 
 ## WebLogic Specific Notes
 
