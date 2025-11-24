@@ -66,6 +66,9 @@ public class PrometheusMetricsServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    // Minimal default configuration that exports all MBeans
+    private static final String DEFAULT_CONFIG = "---\n";
+
     private PrometheusRegistry registry;
     private PrometheusScrapeHandler scrapeHandler;
     private JmxCollector jmxCollector;
@@ -109,8 +112,7 @@ public class PrometheusMetricsServlet extends HttpServlet {
                 jmxCollector = new JmxCollector(inputStream);
             } else {
                 // Use minimal default configuration (collects all MBeans)
-                String defaultConfig = "---\n";
-                jmxCollector = new JmxCollector(defaultConfig);
+                jmxCollector = new JmxCollector(DEFAULT_CONFIG);
             }
 
             // Register the JMX collector
