@@ -1,0 +1,32 @@
+---
+# Example JMX Exporter configuration for servlet deployment
+# This configuration can be used with the PrometheusMetricsServlet
+
+# Optionally lower or remove the default MBean cache TTL
+lowercaseOutputName: false
+lowercaseOutputLabelNames: false
+
+# Rules to transform JMX MBean attributes into Prometheus metrics
+rules:
+  # Example rule for Java memory metrics
+  - pattern: 'java.lang<type=Memory><HeapMemoryUsage>(\w+)'
+    name: java_lang_Memory_HeapMemoryUsage_$1
+    type: GAUGE
+    help: Heap memory usage
+
+  # Example rule for thread metrics
+  - pattern: 'java.lang<type=Threading><>(ThreadCount|PeakThreadCount|TotalStartedThreadCount)'
+    name: java_lang_Threading_$1
+    type: GAUGE
+    help: Threading statistics
+
+  # Example rule for garbage collection metrics
+  - pattern: 'java.lang<type=GarbageCollector, name=(.+)><>(CollectionCount|CollectionTime)'
+    name: java_lang_GarbageCollector_$2
+    type: COUNTER
+    labels:
+      gc: $1
+    help: Garbage collection statistics
+
+  # Default rule - export all remaining MBeans with default naming
+  - pattern: ".*"
